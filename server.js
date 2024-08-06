@@ -1,10 +1,19 @@
 const express = require("express");
 const path = require("path");
 const db = require("./db");
+
 const app = express();
 const port = 3004;
 
 app.use(express.json());
+
+// Allow all CORS origins
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    next();
+});
 
 // Serve the index.html file
 app.get("/", (req, res) => {
