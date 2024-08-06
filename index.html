@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Scores</title>
+</head>
+<body>
+    <h1>High Scores</h1>
+    <form id="highscore-form">
+        <label for="initials">Initials:</label>
+        <input type="text" id="initials" name="initials" required>
+        <label for="score">Score:</label>
+        <input type="number" id="score" name="score" required>
+        <label for="level">Level:</label>
+        <select id="level" name="level" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    <h2>Top Scores</h2>
+    <ul id="highscores-list"></ul>
+
+    <script>
+        document.getElementById('highscore-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const initials = document.getElementById('initials').value;
+            const score = document.getElementById('score').value;
+            const level = document.getElementById('level').value;
+
+            fetch('/api/highscore', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ initials, score, level })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                fetchHighscores();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+
+        function fetchHighscores(limit = 10) {
+            const level = document.getElementById('level').value;
+            fetch(`/api/highscores?limit=${limit}&level=${level}`)
+                .then(response => response.json())
+                .then(data => {
+                    const highscoresList = document.getElementById('highscores-list');
+                    highscoresList.innerHTML = '';
+                    data.forEach(score => {
+                        const li = document.createElement('li');
+                        li.textContent = `${score.initials} (Level ${score.level}): ${score.score}`;
+                        highscoresList.appendChild(li);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Fetch highscores on page load
+        fetchHighscores();
+
+        // Fetch highscores when level changes
+        document.getElementById('level').addEventListener('change', function() {
+            fetchHighscores();
+        });
+    </script>
+</body>
+</html>
