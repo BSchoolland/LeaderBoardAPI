@@ -24,13 +24,18 @@
     <ul id="highscores-list"></ul>
 
     <script>
+        let route = window.location.pathname;
+        console.log(route); // Outputs the route after the domain, e.g., "/home"
+        if (route.endsWith('/')){
+            route = route.slice(0, -1);
+        }
         document.getElementById('highscore-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const initials = document.getElementById('initials').value;
             const score = document.getElementById('score').value;
             const level = document.getElementById('level').value;
 
-            fetch('/api/highscore', {
+            fetch(route+'/api/highscore', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -49,7 +54,7 @@
 
         function fetchHighscores(limit = 10) {
             const level = document.getElementById('level').value;
-            fetch(`/api/highscores?limit=${limit}&level=${level}`)
+            fetch(`${route}/api/highscores?limit=${limit}&level=${level}`)
                 .then(response => response.json())
                 .then(data => {
                     const highscoresList = document.getElementById('highscores-list');
