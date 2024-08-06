@@ -27,7 +27,7 @@ app.post("/api/highscore", (req, res) => {
     }
 
     let tableName;
-    switch (level) {
+    switch (parseInt(level)) {
         case 1:
             tableName = "highscores_level1";
             break;
