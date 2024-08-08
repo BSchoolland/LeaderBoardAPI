@@ -15,10 +15,10 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve the index.html file
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
-});
+// // Serve the index.html file
+// app.get("/", (req, res) => {
+//     res.sendFile(path.join(__dirname, "index.html"));
+// });
 
 app.post("/api/highscore", (req, res) => {
     // Log headers and raw body for debugging
@@ -45,6 +45,9 @@ app.post("/api/highscore", (req, res) => {
             break;
         case 3:
             tableName = "highscores_level3";
+            break;
+        case 4:
+            tableName = "highscores_level4";
             break;
         default:
             return res.status(400).json({ error: "Invalid level" });
@@ -93,6 +96,9 @@ app.get("/api/highscores", (req, res) => {
             break;
         case 3:
             tableName = "highscores_level3";
+            break;
+        case 4:
+            tableName = "highscores_level4";
             break;
         default:
             return res.status(400).json({ error: "Invalid level" });
